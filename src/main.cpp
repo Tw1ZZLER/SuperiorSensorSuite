@@ -3,11 +3,9 @@
 #include <Wire.h>
 #include <stdio.h>
 
-// #define I2C_SCL 0
-// #define I2C_SDA 0 
-// #define I2C_PORT_NUMBER 0
+#define WIRE Wire
 #define I2C_ADDRESS_ACCEL_1 0x19
-#define I2C_ADDRESS_GYRO_1 0x68
+#define I2C_ADDRESS_GYRO_1 0x69
 
 Bmi088 bmi(Wire,I2C_ADDRESS_ACCEL_1,I2C_ADDRESS_GYRO_1);
 
@@ -27,19 +25,32 @@ void setup() {
 void loop() {
   // Grab Accelerometer Values  
   bmi.readSensor();
+  char buf[100] = {};
   float t, ax, ay, az, gx, gy, gz;
   t = bmi.getTemperature_C();
   ax = bmi.getAccelX_mss();
   ay = bmi.getAccelY_mss();
   az = bmi.getAccelZ_mss();
-  gx = bmi.getGyroX_rads();
-  gy = bmi.getGyroY_rads();
-  gz = bmi.getGyroZ_rads();
-  int time_ps;
-  time_ps = bmi.getTime_ps();
+  gx = (bmi.getGyroX_rads() / PI) * 180;
+  gy = (bmi.getGyroY_rads() / PI) * 180;
+  gz = (bmi.getGyroY_rads() / PI) * 180;
 
-  Serial.printf("Time: %d Temp: %.2f°C Gyro: %f %f %f Accel: %f %f %f Status: %d\n",
-          time_ps, t,           gx, gy, gz,     ax, ay, az, status);
+  Serial.print("Temp: ");
+  Serial.print(t, 4);
+  Serial.print("°C Gyro: ");
+  Serial.print(gx, 4);
+  Serial.print(" ");
+  Serial.print(gy, 4);
+  Serial.print(" ");
+  Serial.print(gz, 4);
+  Serial.print(" Accel: ");
+  Serial.print(ax, 4);
+  Serial.print(" ");
+  Serial.print(ay, 4);
+  Serial.print(" ");
+  Serial.print(az, 4);
+  Serial.print(" Status: ");
+  Serial.println(status);
 
-  delay(5);
+  delay(500);
 }
