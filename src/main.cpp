@@ -10,7 +10,7 @@
 Bmi088 bmi(Wire,I2C_ADDRESS_ACCEL_1,I2C_ADDRESS_GYRO_1);
 
 int status = 0;
-float xDisplace, yDisplace, zDisplace;
+float xDisplace, yDisplace, zDisplace, time = 0;
 unsigned long lastTime = 0;
 
 void setup() {
@@ -42,7 +42,7 @@ void loop() {
   bmi.readSensor();
   
   char buf[100] = {};
-  float t, ax, ay, az, gx, gy, gz, xChange = 0, yChange = 0, zChange = 0, time;
+  float t, ax, ay, az, gx, gy, gz, xChange = 0, yChange = 0, zChange = 0;
 
   t = bmi.getTemperature_C();
   ax = bmi.getAccelX_mss();
@@ -65,28 +65,32 @@ void loop() {
   float yDisplay = (yDisplace / PI) * 180;
   float zDisplay = (zDisplace / PI) * 180;
 
-  // Serial.print("Temp: ");
-  // Serial.print(t, 4);
-  // Serial.print("°C Gyro: ");
-  // Serial.print(gx, 4);
-  // Serial.print(" ");
-  // Serial.print(gy, 4);
-  // Serial.print(" ");
-  // Serial.print(gz, 4);
-  // Serial.print(" Accel: ");
-  // Serial.print(ax, 4);
-  // Serial.print(" ");
-  // Serial.print(ay, 4);
-  // Serial.print(" ");
-  // Serial.print(az, 4);
-  // Serial.print(" Status: ");
-  // Serial.println(status);
-  Serial.print("X: ");
-  Serial.print(xDisplay, 4);
-  Serial.print(" Y: ");
-  Serial.print(yDisplay, 4);
-  Serial.print(" Z: ");
-  Serial.println(zDisplay, 4);
+  if(time == 500) {
+    Serial.print("Temp: ");
+    Serial.print(t, 4);
+    Serial.print("°C Gyro: ");
+    Serial.print(gx, 4);
+    Serial.print(" ");
+    Serial.print(gy, 4);
+    Serial.print(" ");
+    Serial.print(gz, 4);
+    Serial.print(" Accel: ");
+    Serial.print(ax, 4);
+    Serial.print(" ");
+    Serial.print(ay, 4);
+    Serial.print(" ");
+    Serial.print(az, 4);
+    Serial.print(" Status: ");
+    Serial.println(status);
+    Serial.print("X: ");
+    Serial.print(xDisplay, 4);
+    Serial.print(" Y: ");
+    Serial.print(yDisplay, 4);
+    Serial.print(" Z: ");
+    Serial.println(zDisplay, 4);
+    time = 0;
+  }
+  time++;
 
   //delay(20);
 }
